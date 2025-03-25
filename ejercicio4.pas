@@ -141,25 +141,42 @@ begin
 		writeln ('modificacion exitosa'); 
 	end;
 end; 			
-procedure Modificar(var emp:Archivo); 
+procedure exportardatos(var emp:Archivo;var texto:Text);
+var  nomF:String[30]; e:Empleados;
+begin 
+	writeln ('agregar nombre fisico'); 
+	readln (nomF);
+	assign (texto, nomF); 
+	rewrite(texto); 
+	reset(emp);
+	while not eof(emp) do begin
+		read(emp, e);
+		with e do writeln (nombre:5,ape:5,edad:5, dni:5, num:5);
+		with e do write(texto,nombre, ' ',ape,' ', dni, ' ' ,edad,' ',num); 
+	end; 
+	close(texto);
+end;
+procedure Modificar(var emp:Archivo;var Texto:Text); 
 var 
 	op:Char;
 begin 
 	writeln('\\menu para modificar\\\'); 
 	writeln( 'opcion A= AgregarEmpleados');
 	writeln('opcion B= ModificarDni');
+	writeln ('opcion C= exportarDatos');
 	readln(op);
 	case op of 
 		'A': agregarEmpleado(emp);
 		'B': modificarEdad(emp);
+		'C': exportarDatos(emp,Texto);
 	else 
-		writeln ('la opcion fue correcta');
+		writeln ('la opcion fue incorrecta');
 	end;
 	close(emp);
 end;
 
 var 
-	emp:Archivo; op:String;NomFisico:String[20];
+	emp:Archivo; op:String;NomFisico:String[20]; texto:Text;
 begin
 	writeln('ingresar nombre fisico para crear o abrir archivo : ');
 	readln(NomFisico);
@@ -173,7 +190,7 @@ begin
 	case op of 
 		'A' :CreacionDeArchivos(emp);
 		'B': LeerArchivo(emp);
-		'C': Modificar(emp);
+		'C': Modificar(emp,texto);
 	end;
 	
 End.
